@@ -3,93 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Duelo de Prompts - Ao Vivo (Turma)</title>
+    <title>Duelo de Prompts - Ao Vivo</title>
     <style>
-        :root {
-            --primary: #4F46E5;
-            --secondary: #7C3AED;
-            --danger: #DC2626;
-            --success: #059669;
-            --bg: #F3F4F6;
-            --card: #FFFFFF;
-            --text: #1F2937;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            background-color: var(--card);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            max-width: 650px;
-            width: 100%;
-        }
+        :root { --primary: #4F46E5; --danger: #DC2626; --bg: #F3F4F6; --card: #FFFFFF; --text: #1F2937; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, sans-serif; background-color: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+        .container { background-color: var(--card); padding: 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); max-width: 650px; width: 100%; }
         h1, h2 { color: var(--primary); text-align: center; }
         .hidden { display: none; }
-        input[type="text"], input[type="password"], textarea, select {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0 15px 0;
-            border: 1px solid #D1D5DB;
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 15px;
-        }
+        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0 15px 0; border: 1px solid #D1D5DB; border-radius: 8px; box-sizing: border-box; font-size: 15px; }
         textarea { height: 130px; resize: vertical; }
-        button {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            width: 100%;
-            transition: background 0.3s;
-            font-weight: bold;
-        }
+        button { background-color: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-size: 16px; cursor: pointer; width: 100%; transition: background 0.3s; font-weight: bold; }
         button:hover { background-color: #4338CA; }
         button:disabled { background-color: #9CA3AF; cursor: not-allowed; }
         .btn-admin { background-color: #D97706; margin-top: 10px; }
         .btn-admin:hover { background-color: #B45309; }
-        .rule-tip {
-            font-size: 13px;
-            background: #FEF3C7;
-            padding: 10px;
-            border-left: 4px solid #F59E0B;
-            margin-bottom: 15px;
-            border-radius: 4px;
-            line-height: 1.4;
-        }
-        .timer-box {
-            text-align: center;
-            font-weight: bold;
-            color: var(--danger);
-            font-size: 18px;
-            margin-bottom: 15px;
-            background: #FEE2E2;
-            padding: 8px;
-            border-radius: 6px;
-        }
-        .ranking-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-        .ranking-table th, .ranking-table td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #E5E7EB;
-        }
+        .timer-box { text-align: center; font-weight: bold; color: var(--danger); font-size: 18px; margin-bottom: 15px; background: #FEE2E2; padding: 8px; border-radius: 6px; }
+        .ranking-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .ranking-table th, .ranking-table td { padding: 10px; text-align: left; border-bottom: 1px solid #E5E7EB; }
         .ranking-table th { background-color: #EEF2FF; color: var(--primary); }
     </style>
 </head>
@@ -97,356 +27,267 @@
 
 <div class="container" id="app">
     
-    <!-- TELA 1: LOBBY E ACESSO ADMIN -->
+    <!-- LOBBY -->
     <div id="screen-lobby">
         <h1>⚔️ Duelo de Prompts 🤖</h1>
-        <p style="text-align: center;">Conecte-se com sua turma para o desafio ao vivo!</p>
+        <p style="text-align: center;">Conecte-se com sua turma!</p>
         
-        <label for="student-name"><strong>Seu Nome Completo:</strong></label>
+        <label><strong>Seu Nome:</strong></label>
         <input type="text" id="student-name" placeholder="Ex: Ana Silva">
         
-        <label for="student-turma"><strong>Sua Turma:</strong></label>
-        <input type="text" id="student-turma" placeholder="Ex: 6º Ano A">
-
-        <button onclick="entrarLobby()">Entrar na Partida 🚀</button>
-        
-        <hr style="margin: 25px 0; border: 0; border-top: 1px solid #E5E7EB;">
-        
-        <label><strong>Área do Professor (Admin):</strong></label>
-        <input type="password" id="admin-pass" placeholder="Senha de Admin">
-        <button class="btn-admin" id="btn-login-admin" onclick="entrarAdmin()">Acessar Painel ⚙️</button>
-    </div>
-
-    <!-- TELA 2: AGUARDANDO INÍCIO (LOBBY DOS ALUNOS) -->
-    <div id="screen-waiting" class="hidden">
-        <h1>⏳ Aguardando o Professor...</h1>
-        <p style="text-align: center;" id="welcome-msg">Você está conectado(a)! Olhe para o telão da sala e aguarde o início do primeiro desafio.</p>
-        <div style="text-align: center; font-size: 40px; margin: 30px 0;">🎮</div>
-    </div>
-
-    <!-- TELA 3: PAINEL DO PROFESSOR (ADMIN) -->
-    <div id="screen-admin" class="hidden">
-        <h2>⚙️ Painel de Controle (Admin)</h2>
-        <p>Controle o andamento da partida para todos os alunos conectados:</p>
-        
-        <label for="select-challenge"><strong>Selecione o Desafio Atual:</strong></label>
-        <select id="select-challenge">
-            <option value="0">Desafio 1: O Resumo do Livro (Fácil)</option>
-            <option value="1">Desafio 2: Explicação de Matemática (Fácil)</option>
-            <option value="2">Desafio 3: Tradução Divertida (Fácil)</option>
-            <option value="3">Desafio 4: O Detetive de Erros (Médio)</option>
-            <option value="4">Desafio 5: Classificador de Sentimentos (Médio)</option>
-            <option value="5">Desafio 6: Planejador de Estudos (Médio)</option>
-            <option value="6">Desafio 7: O Conto de Ficção (Médio)</option>
-            <option value="7">Desafio 8: Juiz de Reembolso (Difícil)</option>
-            <option value="8">Desafio 9: Extração de Dados Avançada (Difícil)</option>
-            <option value="9">Desafio 10: O Desafio Mestre (Difícil)</option>
+        <label><strong>Selecione sua Turma:</strong></label>
+        <select id="student-turma">
+            <option value="6º Ano">6º Ano</option>
+            <option value="6º Ano 2">6º Ano 2</option>
+            <option value="8º Ano">8º Ano</option>
+            <option value="9º Ano">9º Ano</option>
         </select>
 
-        <button onclick="adminComando('jogando')">▶️ Iniciar Desafio (3 min)</button>
-        <button class="btn-admin" onclick="adminComando('ranking')">🏆 Exibir Ranking (Top 10)</button>
-        <button style="background-color: #6B7280; margin-top: 10px;" onclick="adminComando('lobby')">🏠 Voltar ao Lobby</button>
+        <button id="btn-entrar" onclick="entrarLobby()">Entrar na Partida 🚀</button>
+        
+        <hr style="margin: 25px 0; border: 0; border-top: 1px solid #E5E7EB;">
+        <label><strong>Painel do Professor (Admin):</strong></label>
+        <input type="password" id="admin-pass" placeholder="Senha">
+        <button class="btn-admin" id="btn-login-admin" onclick="entrarAdmin()">Gerenciar Turma Selecionada ⚙️</button>
     </div>
 
-    <!-- TELA 4: ARENA DO ALUNO (RESPONDENDO) -->
-    <div id="screen-arena" class="hidden">
-        <div class="timer-box" id="timer-display">Tempo restante: 03:00</div>
-        
-        <h2 id="challenge-title">Título do Desafio</h2>
-        <p id="challenge-desc" style="background: #EEF2FF; padding: 12px; border-radius: 6px; line-height: 1.5;"></p>
-        
-        <div class="rule-tip">
-            💡 <strong>Dicas do Guia:</strong> Dê um papel para a IA, use tags como &lt;instrucoes&gt;, dê exemplos, peça passo a passo e proíba invenções!
-        </div>
+    <!-- AGUARDANDO -->
+    <div id="screen-waiting" class="hidden">
+        <h1>⏳ Aguardando...</h1>
+        <p style="text-align: center;" id="welcome-msg">Olhe para o telão e aguarde o professor iniciar a rodada da sua turma.</p>
+    </div>
 
+    <!-- PAINEL ADMIN -->
+    <div id="screen-admin" class="hidden">
+        <h2 id="admin-title">⚙️ Painel de Controle</h2>
+        <div class="timer-box" id="admin-timer">Tempo da Partida: 05:00</div>
+        
+        <label><strong>Selecione o Desafio:</strong></label>
+        <select id="select-challenge"></select>
+
+        <button onclick="adminComando('jogando')">▶️ Iniciar Desafio (5 min)</button>
+        <button class="btn-admin" onclick="adminComando('ranking')">🏆 Exibir Ranking</button>
+        <button style="background-color: #6B7280; margin-top: 10px;" onclick="location.reload()">🏠 Sair do Painel</button>
+    </div>
+
+    <!-- ARENA -->
+    <div id="screen-arena" class="hidden">
+        <div class="timer-box" id="timer-display">Tempo restante: 05:00</div>
+        <h2 id="challenge-title">Título</h2>
+        <p id="challenge-desc" style="background: #EEF2FF; padding: 12px; border-radius: 6px;"></p>
         <label><strong>Seu Prompt Secreto:</strong></label>
         <textarea id="prompt-input" placeholder="Escreva seu comando aqui..."></textarea>
-
         <button id="btn-submit" onclick="enviarPrompt()">Enviar Resposta ⚡</button>
     </div>
 
-    <!-- TELA 5: RANKING (TOP 10) -->
+    <!-- RANKING -->
     <div id="screen-ranking" class="hidden">
         <h2>🏆 Top 10 da Turma</h2>
-        <p style="text-align: center;">Confira os melhores pontuadores da rodada!</p>
-        
-        <div id="ranking-container">
-            <table class="ranking-table">
-                <thead>
-                    <tr><th>Pos</th><th>Nome</th><th>Turma</th><th>Pontos</th></tr>
-                </thead>
-                <tbody id="ranking-tbody">
-                    <!-- Preenchido via JS -->
-                </tbody>
-            </table>
-        </div>
-        <br>
-        <p style="text-align: center; color: #6B7280; font-size: 14px;">Aguardando o professor liberar a próxima etapa...</p>
+        <table class="ranking-table">
+            <thead><tr><th>Pos</th><th>Nome</th><th>Turma</th><th>Pts</th></tr></thead>
+            <tbody id="ranking-tbody"></tbody>
+        </table>
     </div>
 
 </div>
 
 <script>
-    // ⚠️ ATENÇÃO: COLE SUA NOVA URL DO GOOGLE APPS SCRIPT AQUI ABAIXO
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx5CPct1DQPa3WGGfqmTCTTpJdLWwwaiapW1G8VgO_KPwVrqai2AIyE0gU_I_G4VqueUQ/exec";
+    // ⚠️ ATENÇÃO: COLE SUA URL DO GOOGLE APPS SCRIPT AQUI
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyCc2XCIlxU8iRl0-8Xa1Vk54WD7Phd6v3t2PHWqTr5Z86hHy7DVERcRyGMnmrwH46IAw/exec";
 
-    const challenges = [
-        { title: "1. O Resumo do Livro", desc: "Vocês precisam que a IA resuma um livro de 200 páginas sem inventar fatos. Crie um prompt aplicando as regras para evitar alucinações.", weight: 1 },
-        { title: "2. Explicação de Matemática", desc: "A IA precisa explicar frações para uma criança usando um exemplo prático (pizza) sem dar a resposta pronta.", weight: 1 },
-        { title: "3. Tradução Divertida", desc: "Peça para a IA traduzir uma frase exigindo um tom de pirata nas falas.", weight: 1 },
-        { title: "4. O Detetive de Erros", desc: "A IA deve agir como programador sênior, analisar um erro dentro de tags <codigo> e explicar o passo a passo da correção.", weight: 2 },
-        { title: "5. Classificador de Sentimentos", desc: "Crie um prompt com exemplos estruturados em tags para a IA classificar comentários de clientes.", weight: 2 },
-        { title: "6. Planejador de Estudos", desc: "A IA deve atuar como orientador educacional e montar um cronograma usando raciocínio passo a passo (<thinking>).", weight: 2 },
-        { title: "7. O Conto de Ficção", desc: "Escreva um comando definindo um papel exato para a IA, usando tags <contexto> e delimitando um formato de saída.", weight: 2 },
-        { title: "8. Juiz de Reembolso", desc: "A IA deve analisar um reembolso verificando prazos passo a passo antes do veredito, proibindo inventar dados.", weight: 3 },
-        { title: "9. Extração de Dados Avançada", desc: "A IA deve ler um texto bruto e extrair informações exatas, formatando a saída de modo estrito sem saudações.", weight: 3 },
-        { title: "10. O Desafio Mestre", desc: "Crie um prompt completo utilizando a estrutura Mestre (Papel, Contexto, Instruções com tags XML, Exemplos e Tratamento de Erros).", weight: 3 }
-    ];
+    const chData = {
+        "6º Ano": [
+            { title: "1. Resumo Seguro", desc: "Resuma um livro sem inventar fatos.", weight: 1 },
+            { title: "2. Ensine Frações", desc: "Explique frações com fatias de pizza.", weight: 1 },
+            { title: "3. Tradução Pirata", desc: "Traduza para inglês usando tom de pirata.", weight: 1 },
+            { title: "4. Detetive de Código", desc: "Corrija o erro passo a passo dentro de <codigo>.", weight: 2 },
+            { title: "5. Classificador Sentimental", desc: "Crie um classificador usando exemplos em tags.", weight: 2 },
+            { title: "6. Planejador de Estudos", desc: "Monte um cronograma com raciocínio <thinking>.", weight: 2 },
+            { title: "7. Conto de Ficção", desc: "Defina papel, <contexto> e formato em tópicos.", weight: 2 },
+            { title: "8. Juiz de Reembolso", desc: "Analise o prazo passo a passo sem inventar.", weight: 3 },
+            { title: "9. Extração de Dados", desc: "Extraia sem saudações do robô.", weight: 3 },
+            { title: "10. Desafio Mestre", desc: "Estrutura completa (Papel, XML, Exemplos, Prevenção).", weight: 3 }
+        ],
+        "6º Ano 2": [
+            { title: "1. Ajudante de Geografia", desc: "Peça para a IA explicar a diferença entre Clima e Tempo usando a sua cidade como exemplo.", weight: 1 },
+            { title: "2. Criador de Pets (Ciências)", desc: "Crie um animal imaginário juntando dois animais reais e peça para a IA descrever onde ele vive.", weight: 1 },
+            { title: "3. Tradutor Gamer (Inglês)", desc: "Peça para a IA traduzir 3 itens de videogame (ex: sword, shield) explicando de um jeito fácil.", weight: 1 },
+            { title: "4. Entrevista Histórica", desc: "Aja como um Faraó do Egito Antigo e responda a perguntas usando obrigatoriamente a tag <entrevista>.", weight: 2 },
+            { title: "5. Corretor de Redação", desc: "Use a tag <texto> para colocar uma frase sem pontuação e peça para a IA corrigir e explicar os erros.", weight: 2 },
+            { title: "6. Mestre da Tabuada", desc: "Crie um jogo matemático onde a IA dá dicas passo a passo (<thinking>) sem revelar a resposta na hora.", weight: 2 },
+            { title: "7. Classificador de Lixo", desc: "Use exemplos para ensinar a IA a separar lixo reciclável de lixo orgânico.", weight: 2 },
+            { title: "8. Avaliador de Notícias", desc: "Atue como jornalista. Avalie uma notícia passo a passo, proibindo terminantemente a invenção de dados.", weight: 3 },
+            { title: "9. Gerador de RPG", desc: "Gere uma ficha de personagem de fantasia ESTRITAMENTE em formato JSON, sem texto extra ou saudações.", weight: 3 },
+            { title: "10. O Super Guia Mestre", desc: "Use a estrutura Mestre completa: Papel (Guia de Marte), Contexto, Tags XML, Exemplos e Proibição de Alucinações.", weight: 3 }
+        ],
+        "8º Ano": [
+            { title: "1. Leigo na Revolução", desc: "A IA atua como historiador explicando a Revolução Industrial para leigos.", weight: 1 },
+            { title: "2. Tradução Ritmada", desc: "Traduza uma música do inglês para o português mantendo rimas.", weight: 1 },
+            { title: "3. Quiz do Corpo Humano", desc: "Gere um quiz de 5 questões sobre o sistema digestório.", weight: 1 },
+            { title: "4. Caçador de Fake News", desc: "Analise uma manchete sensacionalista usando a tag <analise>.", weight: 2 },
+            { title: "5. O Mestre da Equação", desc: "Explique a resolução de equação 1º grau passo a passo sem dar a resposta direta.", weight: 2 },
+            { title: "6. Nutricionista IA", desc: "Monte um cardápio com papel bem definido e exemplos de alimentos.", weight: 2 },
+            { title: "7. Roteiro de Podcast", desc: "Use <contexto> para gerar a abertura de um podcast climático.", weight: 2 },
+            { title: "8. O Grande Debate", desc: "Extraia argumentos prós e contras em formato ESTRITO de JSON.", weight: 3 },
+            { title: "9. Juiz da Ética", desc: "Julgue uso de IA em escola usando obrigatoriamente a tag <thinking>.", weight: 3 },
+            { title: "10. Desafio Mestre", desc: "Estrutura completa (Papel, XML, Exemplos, Prevenção).", weight: 3 }
+        ],
+        "9º Ano": [
+            { title: "1. Física no Skate", desc: "Explique as Leis de Newton com exemplos do dia a dia (skate/carro).", weight: 1 },
+            { title: "2. Foco no Vestibulinho", desc: "Monte um cronograma proibindo a invenção de matérias falsas.", weight: 1 },
+            { title: "3. Tradutor de Humor", desc: "Adapte uma piada estrangeira para o contexto brasileiro.", weight: 1 },
+            { title: "4. Cupido Químico", desc: "Explique ligações covalentes com analogias de relacionamentos.", weight: 2 },
+            { title: "5. O Revisor Rigoroso", desc: "Revise um texto listando erros dentro de <correcoes>.", weight: 2 },
+            { title: "6. Análise Literária", desc: "Extraia figuras de linguagem de poema modernista para uma tabela.", weight: 2 },
+            { title: "7. Fato ou Opinião", desc: "Use a técnica few-shot (exemplos) para classificar frases.", weight: 2 },
+            { title: "8. Probabilidade de Mendel", desc: "Resolva genética usando OBRIGATORIAMENTE a etapa de <thinking>.", weight: 3 },
+            { title: "9. Entrevista Jovem Aprendiz", desc: "Atue como RH Severo simulando uma entrevista.", weight: 3 },
+            { title: "10. Desafio Mestre", desc: "Estrutura completa (Papel, XML, Exemplos, Prevenção).", weight: 3 }
+        ]
+    };
 
-    let meuNome = "";
-    let minhaTurma = "";
-    let desafioAtualIdx = -1;
-    let jaEnviouAtual = false;
-    let pollInterval = null;
-    let tempoFimGlobal = 0;
-    
-    // Variável para guardar a senha verificada
-    let senhaValidada = "";
+    let meuNome = "", minhaTurma = "", desafioAtualIdx = -1, jaEnviouAtual = false;
+    let pollInterval = null, tempoFimGlobal = 0, senhaValidada = "";
+    let souAdmin = false;
+
+    function carregarSelectAdmin() {
+        let sel = document.getElementById("select-challenge");
+        sel.innerHTML = "";
+        chData[minhaTurma].forEach((ch, i) => {
+            let opt = document.createElement("option");
+            opt.value = i;
+            opt.innerText = `Desafio ${i+1}: ${ch.title} (Peso ${ch.weight})`;
+            sel.appendChild(opt);
+        });
+    }
 
     function entrarLobby() {
         meuNome = document.getElementById("student-name").value.trim();
-        minhaTurma = document.getElementById("student-turma").value.trim();
+        minhaTurma = document.getElementById("student-turma").value;
+        if (!meuNome) return alert("Preencha seu nome!");
 
-        if (!meuNome || !minhaTurma) {
-            alert("Por favor, preencha seu nome e sua turma!");
-            return;
-        }
-
-        fetch(GOOGLE_SCRIPT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({ acao: "entrar", nome: meuNome, turma: minhaTurma })
-        })
-        .then(res => res.json())
-        .then(data => {
+        document.getElementById("btn-entrar").innerText = "Conectando...";
+        fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ acao: "entrar", nome: meuNome, turma: minhaTurma }) })
+        .then(res => res.json()).then(data => {
             if (data.status === "ok") {
                 document.getElementById("screen-lobby").classList.add("hidden");
                 document.getElementById("screen-waiting").classList.remove("hidden");
-                document.getElementById("welcome-msg").innerText = `Olá, ${meuNome}! Você está conectado(a). Aguarde o professor iniciar.`;
                 iniciarSincronizacao();
-            } else {
-                alert("Erro ao conectar: " + data.msg);
-            }
-        })
-        .catch(() => {
-            alert("Erro de conexão com o servidor. Tente novamente.");
+            } else alert("Erro: " + data.msg);
         });
     }
 
     function entrarAdmin() {
         let senhaDigitada = document.getElementById("admin-pass").value;
-        if (!senhaDigitada) {
-            alert("Digite a senha do professor.");
-            return;
-        }
+        minhaTurma = document.getElementById("student-turma").value; 
+        if (!senhaDigitada) return alert("Digite a senha do professor.");
 
-        let btn = document.getElementById("btn-login-admin");
-        btn.innerText = "Verificando...";
-        btn.disabled = true;
-
-        // O site agora pergunta para a Planilha se a senha está correta
-        fetch(GOOGLE_SCRIPT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({ acao: "login_admin", senha: senhaDigitada })
-        })
-        .then(res => res.json())
-        .then(data => {
-            btn.innerText = "Acessar Painel ⚙️";
-            btn.disabled = false;
-            
+        document.getElementById("btn-login-admin").innerText = "Verificando...";
+        fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ acao: "login_admin", senha: senhaDigitada }) })
+        .then(res => res.json()).then(data => {
+            document.getElementById("btn-login-admin").innerText = "Gerenciar Turma Selecionada ⚙️";
             if (data.status === "ok") {
-                senhaValidada = senhaDigitada; // Guarda a senha verdadeira em memória para os próximos comandos
+                senhaValidada = senhaDigitada; 
+                souAdmin = true;
+                carregarSelectAdmin();
+                document.getElementById("admin-title").innerText = `⚙️ Painel Admin (${minhaTurma})`;
                 document.getElementById("screen-lobby").classList.add("hidden");
                 document.getElementById("screen-admin").classList.remove("hidden");
-            } else {
-                alert(data.msg); // Mostra "Senha incorreta!" vindo do servidor
-            }
-        })
-        .catch(() => {
-            btn.innerText = "Acessar Painel ⚙️";
-            btn.disabled = false;
-            alert("Erro de conexão com o servidor.");
+                iniciarSincronizacao(); 
+            } else alert(data.msg); 
         });
     }
 
     function adminComando(fase) {
-        let select = document.getElementById("select-challenge");
-        let desafioIdx = parseInt(select.value);
-
-        // Agora o comando vai acompanhado da senha validada
+        let idx = parseInt(document.getElementById("select-challenge").value);
         fetch(GOOGLE_SCRIPT_URL, {
             method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({ 
-                acao: "admin_cmd", 
-                fase: fase, 
-                desafioAtual: desafioIdx, 
-                duracao: 180,
-                senha: senhaValidada 
-            })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.status === "ok") {
-                alert(`Sucesso! O comando [${fase.toUpperCase()}] foi enviado para todos os alunos.`);
-            } else {
-                alert("Erro: " + data.msg);
-            }
-        })
-        .catch(err => {
-            alert("Erro de rede ao comandar o jogo. Verifique sua conexão.");
+            body: JSON.stringify({ acao: "admin_cmd", turma: minhaTurma, fase: fase, desafioAtual: idx, duracao: 300, senha: senhaValidada })
+        }).then(res => res.json()).then(data => {
+            if (data.status === "ok") alert(`Ação ${fase.toUpperCase()} enviada para o ${minhaTurma}!`);
         });
     }
 
     function iniciarSincronizacao() {
         if (pollInterval) clearInterval(pollInterval);
-        
+        let separador = GOOGLE_SCRIPT_URL.includes("?") ? "&" : "?";
         pollInterval = setInterval(() => {
-            fetch(GOOGLE_SCRIPT_URL, { 
-                method: 'POST',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify({ acao: "buscar_estado" })
-            })
+            let pollUrl = `${GOOGLE_SCRIPT_URL}${separador}acao=buscar_estado&turma=${encodeURIComponent(minhaTurma)}&t=${new Date().getTime()}`;
+            fetch(pollUrl, { method: 'GET' })
             .then(res => res.json())
             .then(data => {
-                if (data.status === "ok") {
-                    sincronizarTela(data.estado, data.ranking);
-                }
-            })
-            .catch(err => console.log("Erro de sincronização:", err));
+                if (data.status === "ok") sincronizarTela(data.estado, data.ranking);
+            });
         }, 3000); 
     }
 
     function sincronizarTela(estado, ranking) {
-        let fase = estado.fase;
-        let novoDesafio = estado.desafioAtual;
         tempoFimGlobal = estado.tempoFim;
+        atualizarCronometrosGlobais(); 
 
-        if (fase === "lobby") {
+        if(souAdmin) return; 
+
+        if (estado.fase === "lobby") {
             document.getElementById("screen-waiting").classList.remove("hidden");
             document.getElementById("screen-arena").classList.add("hidden");
             document.getElementById("screen-ranking").classList.add("hidden");
-        } 
-        else if (fase === "jogando") {
-            if (desafioAtualIdx !== novoDesafio) {
-                desafioAtualIdx = novoDesafio;
-                jaEnviouAtual = false; 
-                carregarDesafioNaArena();
+        } else if (estado.fase === "jogando") {
+            if (desafioAtualIdx !== estado.desafioAtual) {
+                desafioAtualIdx = estado.desafioAtual;
+                jaEnviouAtual = false;
+                let ch = chData[minhaTurma][desafioAtualIdx];
+                document.getElementById("challenge-title").innerText = `Desafio ${desafioAtualIdx+1}: ${ch.title}`;
+                document.getElementById("challenge-desc").innerText = ch.desc;
+                document.getElementById("prompt-input").value = "";
+                document.getElementById("btn-submit").disabled = false;
+                document.getElementById("btn-submit").innerText = "Enviar Resposta ⚡";
             }
             document.getElementById("screen-waiting").classList.add("hidden");
             document.getElementById("screen-ranking").classList.add("hidden");
             document.getElementById("screen-arena").classList.remove("hidden");
-            atualizarCronometro();
-        } 
-        else if (fase === "ranking") {
-            atualizarTabelaRanking(ranking);
+        } else if (estado.fase === "ranking") {
+            let tbody = document.getElementById("ranking-tbody");
+            tbody.innerHTML = "";
+            ranking.forEach((r, idx) => {
+                tbody.innerHTML += `<tr><td>${idx+1}º</td><td>${r.nome}</td><td>${r.turma}</td><td><strong>${r.pontos} pts</strong></td></tr>`;
+            });
             document.getElementById("screen-waiting").classList.add("hidden");
             document.getElementById("screen-arena").classList.add("hidden");
             document.getElementById("screen-ranking").classList.remove("hidden");
         }
     }
 
-    function carregarDesafioNaArena() {
-        let ch = challenges[desafioAtualIdx];
-        document.getElementById("challenge-title").innerText = `Desafio ${desafioAtualIdx + 1}: ${ch.title}`;
-        document.getElementById("challenge-desc").innerText = ch.desc;
-        document.getElementById("prompt-input").value = "";
-        document.getElementById("btn-submit").disabled = false;
-        document.getElementById("btn-submit").innerText = "Enviar Resposta ⚡";
-    }
-
-    function atualizarCronometro() {
-        let agora = new Date().getTime();
-        let restante = Math.floor((tempoFimGlobal - agora) / 1000);
-
-        if (restante <= 0) {
-            document.getElementById("timer-display").innerText = "Tempo esgotado!";
-            if (!jaEnviouAtual) {
-                enviarPromptAutomaticoPorTempo();
-            }
-        } else {
+    function atualizarCronometrosGlobais() {
+        let restante = Math.floor((tempoFimGlobal - new Date().getTime()) / 1000);
+        let texto = "Tempo esgotado!";
+        
+        if (restante > 0) {
             let m = Math.floor(restante / 60);
             let s = restante % 60;
-            document.getElementById("timer-display").innerText = `Tempo restante: ${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            texto = `Tempo restante: ${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        } else if (!souAdmin && document.getElementById("screen-arena").classList.contains("hidden") === false && !jaEnviouAtual) {
+            enviarPrompt(true); 
         }
+        
+        document.getElementById("timer-display").innerText = texto;
+        document.getElementById("admin-timer").innerText = texto; 
     }
 
-    function enviarPrompt() {
+    function enviarPrompt(forcarFim = false) {
         if (jaEnviouAtual) return;
         let texto = document.getElementById("prompt-input").value.trim();
-        if (!texto) {
-            alert("Escreva seu prompt antes de enviar!");
-            return;
-        }
+        if (!forcarFim && !texto) return alert("Escreva seu prompt!");
 
         jaEnviouAtual = true;
-        let btn = document.getElementById("btn-submit");
-        btn.disabled = true;
-        btn.innerText = "Enviado com sucesso! Aguardando o ranking... ⏳";
-
-        let ch = challenges[desafioAtualIdx];
-
-        fetch(GOOGLE_SCRIPT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({
-                acao: "enviar_prompt",
-                nome: meuNome,
-                desafioIdx: desafioAtualIdx,
-                promptText: texto,
-                peso: ch.weight
-            })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.status === "ok") {
-                console.log("Nota atribuída:", data.nota);
-            }
-        });
-    }
-
-    function enviarPromptAutomaticoPorTempo() {
-        if (jaEnviouAtual) return;
-        jaEnviouAtual = true;
-        let texto = document.getElementById("prompt-input").value.trim() || "(Sem resposta - Tempo esgotado)";
-        let ch = challenges[desafioAtualIdx];
-
-        fetch(GOOGLE_SCRIPT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({
-                acao: "enviar_prompt",
-                nome: meuNome,
-                desafioIdx: desafioAtualIdx,
-                promptText: texto,
-                peso: ch.weight
-            })
-        });
         document.getElementById("btn-submit").disabled = true;
-        document.getElementById("btn-submit").innerText = "Tempo encerrado!";
-    }
+        document.getElementById("btn-submit").innerText = forcarFim ? "Tempo encerrado!" : "Aguardando ranking... ⏳";
 
-    function atualizarTabelaRanking(ranking) {
-        let tbody = document.getElementById("ranking-tbody");
-        tbody.innerHTML = "";
-        ranking.forEach((r, idx) => {
-            let tr = document.createElement("tr");
-            tr.innerHTML = `<td>${idx + 1}º</td><td>${r.nome}</td><td>${r.turma}</td><td><strong>${r.pontos} pts</strong></td>`;
-            tbody.appendChild(tr);
+        let ch = chData[minhaTurma][desafioAtualIdx];
+        fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify({ acao: "enviar_prompt", nome: meuNome, turma: minhaTurma, desafioIdx: desafioAtualIdx, promptText: texto || "(Em branco)", peso: ch.weight })
         });
     }
 </script>
-
 </body>
 </html>
